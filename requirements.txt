@@ -1,0 +1,13 @@
+numpy==1.26.4
+scipy==1.11.4
+pandas==2.2.2
+mne==1.6.1
+pyEDFlib==0.1.38
+scikit-learn==1.4.2
+tensorflow==2.15.1
+shap==0.45.1
+matplotlib==3.8.4
+seaborn==0.13.2
+tqdm==4.66.4
+jupyter==1.0.0
+notebook==7.2.0

@@ -1,0 +1,79 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Jupyter / Colab
+.ipynb_checkpoints/
+.colab/
+
+# Testing / tooling
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+coverage.xml
+htmlcov/
+
+# IDE / editor
+.vscode/
+.idea/
+*.swp
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Data artifacts
+*.edf
+*.EDF
+*.bdf
+*.mat
+*.h5
+*.hdf5
+*.npy
+*.npz
+*.pkl
+*.pickle
+
+# Project data directories
+data/raw/
+data/interim/
+data/processed/
+
+# Model artifacts
+checkpoints/
+models/
+weights/
+*.ckpt
+*.keras
+*.h5
+*.pt
+*.pth
+*.onnx
+
+# Experiment outputs
+outputs/
+experiments/logs/
+experiments/checkpoints/
+tensorboard/
+runs/
+wandb/
+
+# Environment variables
+.env
+.env.*
