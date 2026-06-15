@@ -226,9 +226,9 @@ python src/explainability/shap_explainer.py \
 ```
 
 ## Team
-- Alekhya Nelabhotla
 - Boppidi Anish Reddy
 - Avanika Kademgari
+- Alekhya Nelabhotla
 
 ## Acknowledgements
 - IEEE EMBS Pune Chapter
