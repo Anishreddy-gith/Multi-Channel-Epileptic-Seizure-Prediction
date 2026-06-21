@@ -28,7 +28,7 @@ Submitted to **IEEE EMBS Pune Chapter**.
 ## Project Overview
 - **Task:** Binary EEG segment classification (`preictal`, `interictal`)
 - **EEG Source:** CHB-MIT Scalp EEG Database (PhysioNet)
-- **Patients:** `chb01` to `chb05`
+- **Patients:** `chb01`, `chb05`, `chb08`, `chb14` & `chb23`
 - **Sampling Rate:** 256 Hz
 - **Segment Size:** 4 s (1024 samples)
 - **Stride:** 0.5 s
