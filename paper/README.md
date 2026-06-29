@@ -1,22 +1,35 @@
 # Paper Package
 
-Final conference-paper package generated from frozen repository artifacts.
+Final conference submission package generated from frozen repository artifacts.
 
-## Main Files
+## Main Manuscript
 
-- `conference_paper.md`: final revised manuscript in Markdown.
-- `latex/main.tex`: final LaTeX manuscript.
-- `latex/abstract.tex`: abstract used by the LaTeX manuscript.
-- `sections/`: revised abstract, discussion, limitations, and conclusion excerpts.
-- `tables/`: CSV, Markdown, and LaTeX tables.
-- `figures/`: publication figures and figure audit.
-- `captions/figure_captions.md`: improved figure captions.
+- `conference_paper.md`: Markdown manuscript.
+- `latex/main.tex`: IEEE LaTeX manuscript.
+- `latex/abstract.tex`: abstract included by the LaTeX manuscript.
 - `references/references.bib`: BibTeX database.
-- `supplementary/`: supplementary material and reproducibility checklist.
-- `appendix/appendix.md`: appendix and unavailable-evidence notes.
-- `review/`: claim audit, reviewer-question audit, internal review, and response checklist.
-- `MASTER_EXPERIMENT_INVENTORY.md`: artifact inventory and consistency summary.
+
+## Core Evidence
+
+- Dataset: 10 patients, 273 EDF files, 50 seizure events, 734,796 windows.
+- Positive windows: 14,145; negative windows: 720,651; positive prevalence: 1.9250%.
+- Final EEGNet validation PR-AUC: 0.0239; validation F1: 0.0366.
+
+## Package Directories
+
+- `figures/`: publication figures.
+- `tables/`: CSV, Markdown, and LaTeX tables.
+- `supplementary/`: supplementary material and reproducibility notes.
+- `appendix/`: appendix notes.
+- `review/`: claim audit, reviewer question audit, internal review, and response checklist.
+
+## Generated Reports
+
+- `MASTER_EXPERIMENT_INVENTORY.md`
+- `FINAL_VALIDATION_REPORT.md`
+- `outputs/paper/report/Internship_Report_AnishReddy.docx`
+- `outputs/paper/report/Internship_Report_AnishReddy.pdf`
 
 ## Evidence Rule
 
-The paper package uses only measured results already present in the repository. No new training, preprocessing, label generation, split generation, or metric fabrication was performed during final manuscript revision.
+This package uses only measured results already present in the repository. No new training, preprocessing, label generation, split generation, checkpoint creation, or metric fabrication was performed during final publication packaging.

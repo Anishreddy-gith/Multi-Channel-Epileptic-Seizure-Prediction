@@ -4,8 +4,9 @@
 \usepackage{url}
 \usepackage{hyperref}
 \usepackage{array}
-\usepackage{multirow}
 \usepackage{amsmath}
+
+\graphicspath{{../figures/}}
 
 \title{A Patient-Wise CHB-MIT Seizure Prediction Study with Leakage, Label, and Horizon Audits}
 \author{Anonymous Submission}
@@ -18,17 +19,47 @@
 \end{abstract}
 
 \section{Introduction}
-Epileptic seizure prediction seeks to identify a preictal state before clinical seizure onset. Public EEG datasets such as CHB-MIT enable reproducible benchmarking \cite{physionet_chbmit,goldberger2000physiobank}, but the task is unusually sensitive to experimental design. Patient leakage can inflate performance, overlapping windows can reduce the effective number of independent samples, and the definition of ``preictal'' can convert a physiologically uncertain interval into a hard binary label \cite{mormann2007seizure,kuhlmann2018seizure}.
+Epileptic seizure prediction seeks to identify a preictal state before clinical seizure onset. Public electroencephalography (EEG) datasets such as the Children's Hospital Boston--Massachusetts Institute of Technology (CHB-MIT) Scalp EEG Database enable reproducible benchmarking \cite{physionet_chbmit,goldberger2000physiobank}, but the task is unusually sensitive to experimental design. Patient leakage can inflate performance, overlapping windows can reduce the effective number of independent samples, and the definition of ``preictal'' can convert a physiologically uncertain interval into a hard binary label \cite{mormann2007seizure,kuhlmann2018seizure}.
 
-This paper reports a completed and frozen CHB-MIT study whose main contribution is not a high-performing model, but an audited experimental account of what did and did not work under a patient-wise protocol. We ask whether standard imbalance strategies, attention or hybrid architectures, or shorter global preictal horizons improve patient-wise window-level discrimination. Under the completed protocol, none of these changes produced strong validation PR-AUC or F1. We therefore frame the study as a reproducibility and problem-formulation contribution rather than a performance benchmark.
+This paper reports a completed and frozen CHB-MIT study whose main contribution is not a high-performing model, but an audited experimental account of what did and did not work under a patient-wise protocol. We ask whether standard imbalance strategies, attention or hybrid architectures, or shorter global preictal horizons improve patient-wise window-level discrimination. Under the completed protocol, none of these changes produced strong validation area under the precision-recall curve (PR-AUC) or F1. We therefore frame the study as a reproducibility and problem-formulation contribution rather than a performance benchmark.
+
+Figure~\ref{fig:pipeline} summarizes the complete repository-backed workflow. Figures~\ref{fig:dataflow}, \ref{fig:preprocessing}, and \ref{fig:trainingpipeline} show the data flow, preprocessing, and training components used to organize the completed experiments.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.92\textwidth]{pipeline_diagram.pdf}
+\caption{End-to-end pipeline from CHB-MIT EDF recordings to paper artifacts. The workflow documents the audited processing, training, evaluation, and reporting path and does not imply clinical deployment.}
+\label{fig:pipeline}
+\end{figure*}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.92\textwidth]{data_flow_diagram.pdf}
+\caption{Data flow from raw European Data Format (EDF) files to interim shards, patient-wise metadata splits, model checkpoints, metric files, and publication tables.}
+\label{fig:dataflow}
+\end{figure*}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.92\textwidth]{preprocessing_flowchart.pdf}
+\caption{Frozen preprocessing workflow: required-channel check, channel ordering, 0.5--40 Hz bandpass filtering, 50 Hz notch filtering, 4 s windows with 2 s stride, per-window z-score normalization, and per-EDF shard writing.}
+\label{fig:preprocessing}
+\end{figure*}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.92\textwidth]{training_pipeline.pdf}
+\caption{Training workflow combining patient-wise split metadata, lazy shard loading, model selection, AdamW optimization, mixed precision, early stopping, checkpointing, threshold selection, and final evaluation.}
+\label{fig:trainingpipeline}
+\end{figure*}
 
 \section{Related Work}
 CHB-MIT seizure-prediction studies differ in window length, feature representation, preictal horizon, seizure prediction horizon, seizure occurrence period, and patient-specific versus patient-independent evaluation \cite{truong2018cnn,dissanayake2020patientindependent,koutsouvelis2024preictal}. Reviews of seizure prediction emphasize that clinically meaningful systems require temporal warning metrics, not only window-level classification scores \cite{mormann2007seizure,kuhlmann2018seizure}.
 
-EEGNet is a compact convolutional architecture for EEG decoding \cite{lawhern2018eegnet}. Transformer-style attention models motivate testing whether temporal modeling capacity can help \cite{vaswani2017attention}, although this study evaluates fixed 4 s windows rather than full warning trajectories. For imbalanced data, precision-recall analysis is often more informative than ROC analysis when positive prevalence is low \cite{davis2006relationship,saito2015precision}. Weighted losses, focal loss, and sampling are common imbalance strategies \cite{lin2017focal,buda2018systematic}. These literatures motivate our emphasis on patient-wise splitting, PR-AUC, leakage audits, and conservative interpretation.
+EEGNet is a compact convolutional architecture for EEG decoding \cite{lawhern2018eegnet}. Transformer-style attention models motivate testing whether temporal modeling capacity can help \cite{vaswani2017attention}, although this study evaluates fixed 4 s windows rather than full warning trajectories. For imbalanced data, precision-recall analysis is often more informative than receiver operating characteristic (ROC) analysis when positive prevalence is low \cite{davis2006relationship,saito2015precision}. Weighted losses, focal loss, and sampling are common imbalance strategies \cite{lin2017focal,buda2018systematic}. These literatures motivate our emphasis on patient-wise splitting, PR-AUC, leakage audits, and conservative interpretation.
 
 \section{Dataset and Split}
-The processed subset contains 10 CHB-MIT patients, 273 EDF files, 50 seizure events, and 734,796 windows. The baseline 10 min label definition produced 14,145 positive windows and 720,651 negative windows, giving a positive ratio of 1.9250\%.
+Table~\ref{tab:dataset} reports the frozen dataset summary. The processed subset contains 10 CHB-MIT patients, 273 EDF files, 50 seizure events, and 734,796 windows. The baseline 10 min label definition produced 14,145 positive windows and 720,651 negative windows, giving a positive ratio of 1.9250\%.
 
 \begin{table}[t]
 \centering
@@ -50,7 +81,9 @@ Positive prevalence & 1.9250\% \\
 \end{tabular}
 \end{table}
 
-\begin{table}[t]
+Table~\ref{tab:split} gives the frozen patient-wise split. No patient appears in more than one split. This is essential because window-level random splits can leak patient-specific EEG characteristics and seizure-proximity patterns into validation or test data. Figures~\ref{fig:patientsplit}, \ref{fig:patientstats}, and \ref{fig:classdist} visualize the split and patient-level class distribution.
+
+\begin{table*}[t]
 \centering
 \caption{Frozen patient-wise split. No patient appears in more than one split.}
 \label{tab:split}
@@ -63,13 +96,36 @@ Validation & 142,231 & 2 & 3,359 & chb01, chb05 \\
 Test & 152,827 & 2 & 2,755 & chb02, chb10 \\
 \bottomrule
 \end{tabular}
-\end{table}
+\end{table*}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{patient_split_diagram.pdf}
+\caption{Patient-wise train, validation, and test split sizes. The partitions contain disjoint patients.}
+\label{fig:patientsplit}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{dataset_statistics_by_patient.pdf}
+\caption{Window and label counts by patient. Patient-level variation motivates patient-wise reporting and conservative interpretation.}
+\label{fig:patientstats}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{positive_negative_distribution.pdf}
+\caption{Overall positive and negative window distribution under the 10 min preictal definition. The positive prevalence is 1.9250\%.}
+\label{fig:classdist}
+\end{figure}
 
 \section{Preprocessing}
 Each EDF was processed independently and stored as per-EDF shards. EDF files were checked for the 18 required common EEG channels; files missing required channels were skipped. Signals were filtered using a 0.5--40 Hz bandpass filter and a 50 Hz notch filter, segmented into 4 s windows with 2 s stride, and normalized independently per window and channel using z-score normalization. The 50 Hz notch is reported as part of the frozen completed pipeline rather than as a tuned methodological claim; because CHB-MIT is a U.S. dataset where 60 Hz line noise may be relevant, this choice is treated as a limitation.
 
 \section{Label Generation and Audit}
 The primary binary label rule marks a window positive if it lies within 10 min before seizure onset. Seizure windows and the 60 s postictal exclusion interval are excluded from interictal negatives.
+
+Table~\ref{tab:labelaudit} reports the label-audit findings. The audit found no evidence of mechanical contamination under the implemented checks. The main concern is therefore scientific label quality, not an observed coding mismatch. Early and late preictal windows receive the same label, so the positive class may be heterogeneous even when the implementation is internally consistent. Figure~\ref{fig:distance} shows the positive-window distance-to-seizure distribution.
 
 \begin{table}[t]
 \centering
@@ -89,21 +145,28 @@ Median shared-overlap segment correlation & 0.9895 \\
 \end{tabular}
 \end{table}
 
-The audit found no evidence of mechanical contamination under the implemented checks. The main concern is therefore scientific label quality, not an observed coding mismatch. Early and late preictal windows receive the same label, so the positive class may be heterogeneous even when the implementation is internally consistent.
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{distance_to_seizure_histogram.pdf}
+\caption{Distance from positive-window end to seizure onset. A total of 47.26\% of positive windows occur more than 5 min before onset.}
+\label{fig:distance}
+\end{figure}
 
 \section{Models and Training}
 We evaluated EEGNet \cite{lawhern2018eegnet}, an attention-based EEG model, and a hybrid EEGNet--Transformer. EEGNet has 26,770 parameters, Attention has 13,730, and Hybrid has 295,906. The Hybrid run was time-limited and is reported as incomplete.
 
-Training used seed 42, batch size 128, AdamW with learning rate 0.0003 and weight decay 0.0001 \cite{loshchilov2019decoupled}, ReduceLROnPlateau scheduling, automatic mixed precision on CUDA, gradient clipping, early stopping, and checkpointing. The imbalance study evaluated weighted cross entropy, focal loss, weighted random sampling, weighted cross entropy with threshold optimization, and focal loss with threshold optimization using EEGNet. Weighted cross entropy with threshold optimization was selected by validation PR-AUC with validation F1 as the tie-breaker.
+Training used seed 42, batch size 128, AdamW with learning rate 0.0003 and weight decay 0.0001 \cite{loshchilov2019decoupled}, ReduceLROnPlateau scheduling, automatic mixed precision on Compute Unified Device Architecture (CUDA), gradient clipping, early stopping, and checkpointing. The imbalance study evaluated weighted cross entropy, focal loss, weighted random sampling, weighted cross entropy with threshold optimization, and focal loss with threshold optimization using EEGNet. Weighted cross entropy with threshold optimization was selected by validation PR-AUC with validation F1 as the tie-breaker.
 
 \section{Evaluation Metrics}
-The primary ranking metric is PR-AUC because positives are rare. ROC-AUC, accuracy, precision, recall, F1, balanced accuracy, MCC, Cohen's kappa, sensitivity, and specificity are also reported. This study reports window-level metrics only. It does not estimate seizure-level sensitivity, false alarms per hour, time in warning, or seizure prediction horizon/seizure occurrence period metrics, which limits clinical interpretation.
+The primary ranking metric is PR-AUC because positives are rare. Area under the receiver operating characteristic curve (ROC-AUC), accuracy, precision, recall, F1, balanced accuracy, Matthews correlation coefficient (MCC), Cohen's kappa, sensitivity, and specificity are also reported. This study reports window-level metrics only. It does not estimate seizure-level sensitivity, false alarms per hour, time in warning, or seizure prediction horizon/seizure occurrence period metrics, which limits clinical interpretation.
 
 \section{Results}
 \subsection{Imbalance Study}
 Weighted cross entropy with threshold optimization achieved validation PR-AUC 0.0239 and validation F1 0.0366 and was selected as the frozen strategy. Focal-loss variants changed threshold-dependent F1 but did not improve validation PR-AUC over the selected strategy. The weighted random sampler run was incomplete and is not used as a completed final strategy. Thus, imbalance handling changed operating points but did not produce strong ranking performance.
 
 \subsection{Final Model Comparison}
+Table~\ref{tab:modelresults} reports the final model comparison. Figure~\ref{fig:modelcomp} visualizes validation PR-AUC and F1, while Figures~\ref{fig:roc}, \ref{fig:prcurve}, \ref{fig:confusion}, \ref{fig:learning}, and \ref{fig:valcurves} provide the final EEGNet evaluation curves.
+
 \begin{table}[t]
 \centering
 \caption{Final model comparison. Hybrid is included for transparency but was incomplete.}
@@ -119,9 +182,53 @@ Hybrid & Incomplete & 0.0238 & 0.0461 & 0.0181 & 0.0354 \\
 \end{tabular}
 \end{table}
 
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{model_comparison_chart.pdf}
+\caption{Validation PR-AUC and F1 for final model runs. Hybrid is shown for transparency but was incomplete.}
+\label{fig:modelcomp}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{roc_curve_eegnet.png}
+\caption{Window-level ROC curve for the final EEGNet evaluation. ROC-AUC is secondary to PR-AUC because positives are rare.}
+\label{fig:roc}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{pr_curve_eegnet.png}
+\caption{Window-level precision-recall curve for the final EEGNet evaluation. PR-AUC is the primary ranking metric.}
+\label{fig:prcurve}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{confusion_matrix_eegnet.png}
+\caption{Threshold-dependent test-set confusion matrix for the selected EEGNet operating point.}
+\label{fig:confusion}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{learning_curves_eegnet.png}
+\caption{EEGNet learning curves from the completed run. The curves document optimization behavior but do not establish generalization beyond the frozen split.}
+\label{fig:learning}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{validation_curves_eegnet.png}
+\caption{EEGNet validation curves over training, used to inspect early stopping and threshold-dependent behavior.}
+\label{fig:valcurves}
+\end{figure}
+
 None of the evaluated architectures produced validation PR-AUC substantially above the 1.9250\% positive prevalence. The Attention model's higher validation PR-AUC did not translate into nonzero F1 under the selected operating point. The available evidence does not support increased model capacity as sufficient to solve the task under this setup.
 
 \subsection{Preictal Horizon Ablation}
+Table~\ref{tab:horizon} reports the EEGNet preictal horizon ablation. Figures~\ref{fig:horizonpr}, \ref{fig:horizonf1}, and \ref{fig:horizonpositive} summarize PR-AUC, F1, and positive class size across horizons.
+
 \begin{table}[t]
 \centering
 \caption{EEGNet preictal horizon ablation. Shorter horizons reduce positives but did not improve both validation PR-AUC and validation F1.}
@@ -137,6 +244,27 @@ Horizon (min) & Positives & Prevalence & Val PR-AUC & Val F1 \\
 \bottomrule
 \end{tabular}
 \end{table}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{preictal_horizon_pr_auc.pdf}
+\caption{Validation PR-AUC for 10, 7.5, 5, and 3 min horizons. Shorter global horizons did not improve PR-AUC over the 10 min baseline.}
+\label{fig:horizonpr}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{preictal_horizon_f1.pdf}
+\caption{Validation F1 for 10, 7.5, 5, and 3 min horizons. Shorter global horizons did not improve F1 over the 10 min baseline.}
+\label{fig:horizonf1}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{positive_class_size_vs_horizon.pdf}
+\caption{Positive class size versus preictal horizon. Shortening the horizon monotonically reduces the number of positive windows.}
+\label{fig:horizonpositive}
+\end{figure}
 
 Simple global horizon shortening was not sufficient to improve discrimination. This does not prove that preictal label design is irrelevant; it only shows that the tested global horizons did not improve the measured validation metrics.
 
