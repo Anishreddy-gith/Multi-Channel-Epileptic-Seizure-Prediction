@@ -1,0 +1,3 @@
+# Revised Conclusion
+
+This study provides a repository-backed patient-wise CHB-MIT seizure prediction experiment with leakage, label, imbalance, and horizon audits. The measured results do not support claims of strong predictive performance: validation PR-AUC remained close to positive prevalence, and no tested shorter preictal horizon improved both PR-AUC and F1 over the 10 min baseline. The main contribution is therefore an honest, reproducible negative finding that highlights the importance of label definition, patient-wise evaluation, and clinically meaningful metrics in seizure prediction research.

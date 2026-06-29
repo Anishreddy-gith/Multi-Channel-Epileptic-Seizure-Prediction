@@ -1,0 +1,5 @@
+- [x] Frozen artifacts used
+- [x] No new experiments during packaging
+- [x] Seeds documented
+- [x] Hardware/software documented
+- [x] Tables and figures generated from saved artifacts

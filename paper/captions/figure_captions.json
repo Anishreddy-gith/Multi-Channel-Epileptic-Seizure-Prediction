@@ -1,0 +1,10 @@
+{
+  "pipeline_diagram": "End-to-end pipeline from CHB-MIT EDF recordings to paper artifacts.",
+  "preprocessing_flowchart": "Frozen preprocessing workflow used for the completed audited experiments.",
+  "patient_split_diagram": "Patient-wise train/validation/test split sizes.",
+  "positive_negative_distribution": "Overall class imbalance under the 10-minute preictal definition.",
+  "distance_to_seizure_histogram": "Distance of positive windows to seizure onset.",
+  "model_comparison_chart": "Validation PR-AUC and F1 for final model runs.",
+  "preictal_horizon_pr_auc": "Validation PR-AUC under preictal horizon ablation.",
+  "preictal_horizon_f1": "Validation F1 under preictal horizon ablation."
+}

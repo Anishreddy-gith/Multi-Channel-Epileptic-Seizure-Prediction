@@ -1,0 +1,18 @@
+\begin{table}
+\caption{Validated model comparison.}
+\label{tab:model_comparison_table}
+\begin{tabular}{llllrrrrrrrrr}
+\toprule
+stage & model & strategy\_id & status & validation\_pr\_auc & validation\_f1 & validation\_roc\_auc & validation\_mcc & test\_pr\_auc & test\_f1 & test\_roc\_auc & test\_mcc & threshold \\
+\midrule
+step1\_imbalance & eegnet & weighted\_ce & COMPLETED & 0.023862 & 0.000000 & 0.515195 & -0.000825 & 0.017886 & 0.000725 & 0.500695 & 0.013105 & 0.500000 \\
+step1\_imbalance & eegnet & weighted\_ce\_threshold & COMPLETED & 0.023862 & 0.036606 & 0.515195 & -0.001935 & 0.017886 & 0.025752 & 0.500695 & -0.007612 & 0.010000 \\
+step1\_imbalance & eegnet & focal\_loss & COMPLETED & 0.022524 & 0.045120 & 0.484487 & -0.008915 & 0.018497 & 0.036550 & 0.532452 & 0.015004 & 0.500000 \\
+step1\_imbalance & eegnet & focal\_loss\_threshold & COMPLETED & 0.022524 & 0.046162 & 0.484487 & 0.001697 & 0.018497 & 0.035428 & 0.532452 & 0.002617 & 0.120000 \\
+step1\_imbalance & eegnet & weighted\_random\_sampler & INCOMPLETE & 0.022983 & 0.043481 & 0.471095 & 0.008412 & 0.020794 & 0.040246 & 0.553084 & 0.014255 & 0.500000 \\
+step3\_final & eegnet & weighted\_ce\_threshold & COMPLETED & 0.023862 & 0.036606 & 0.515195 & -0.001935 & 0.017886 & 0.025752 & 0.500695 & -0.007612 & 0.010000 \\
+step3\_final & attention & weighted\_ce\_threshold & COMPLETED & 0.025804 & 0.000000 & 0.547534 & -0.000583 & 0.016257 & 0.000000 & 0.465945 & 0.000000 & 0.010000 \\
+step3\_final & hybrid & weighted\_ce\_threshold & INCOMPLETE & 0.023781 & 0.046143 & 0.502783 & 0.000000 & 0.018096 & 0.035415 & 0.501946 & 0.000000 & 0.010000 \\
+\bottomrule
+\end{tabular}
+\end{table}

@@ -34,45 +34,37 @@ htmlcov/
 .DS_Store
 Thumbs.db
 
-# Logs
+# Local caches and logs
+/logs/
 *.log
-logs/
+tensorboard/
+runs/
+wandb/
 
-# Data artifacts
+# Raw and processed datasets
+/data/
 *.edf
 *.EDF
 *.bdf
 *.mat
-*.h5
-*.hdf5
 *.npy
 *.npz
-*.pkl
-*.pickle
 
-# Project data directories
-data/raw/
-data/interim/
-data/processed/
-
-# Model artifacts
-checkpoints/
-models/
+# Generated experiment artifacts
+/experiments/
+/outputs/
+/checkpoints/
+/models/
 weights/
 *.ckpt
 *.keras
 *.h5
+*.hdf5
 *.pt
 *.pth
 *.onnx
-
-# Experiment outputs
-outputs/
-experiments/logs/
-experiments/checkpoints/
-tensorboard/
-runs/
-wandb/
+*.pkl
+*.pickle
 
 # Environment variables
 .env

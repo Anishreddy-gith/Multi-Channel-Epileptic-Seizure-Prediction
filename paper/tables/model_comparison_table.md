@@ -1,0 +1,10 @@
+| stage | model | strategy_id | status | validation_pr_auc | validation_f1 | validation_roc_auc | validation_mcc | test_pr_auc | test_f1 | test_roc_auc | test_mcc | threshold |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| step1_imbalance | eegnet | weighted_ce | COMPLETED | 0.0238619 | 0 | 0.515195 | -0.000824777 | 0.0178862 | 0.000725426 | 0.500695 | 0.0131048 | 0.5 |
+| step1_imbalance | eegnet | weighted_ce_threshold | COMPLETED | 0.0238619 | 0.0366058 | 0.515195 | -0.00193481 | 0.0178862 | 0.0257524 | 0.500695 | -0.00761211 | 0.01 |
+| step1_imbalance | eegnet | focal_loss | COMPLETED | 0.0225242 | 0.0451198 | 0.484487 | -0.008915 | 0.0184966 | 0.0365503 | 0.532452 | 0.0150037 | 0.5 |
+| step1_imbalance | eegnet | focal_loss_threshold | COMPLETED | 0.0225242 | 0.0461619 | 0.484487 | 0.00169696 | 0.0184966 | 0.0354284 | 0.532452 | 0.00261715 | 0.12 |
+| step1_imbalance | eegnet | weighted_random_sampler | INCOMPLETE | 0.0229833 | 0.0434811 | 0.471095 | 0.00841247 | 0.0207942 | 0.0402455 | 0.553084 | 0.014255 | 0.5 |
+| step3_final | eegnet | weighted_ce_threshold | COMPLETED | 0.0238619 | 0.0366058 | 0.515195 | -0.00193481 | 0.0178862 | 0.0257524 | 0.500695 | -0.00761211 | 0.01 |
+| step3_final | attention | weighted_ce_threshold | COMPLETED | 0.025804 | 0 | 0.547534 | -0.000583201 | 0.0162572 | 0 | 0.465945 | 0 | 0.01 |
+| step3_final | hybrid | weighted_ce_threshold | INCOMPLETE | 0.0237814 | 0.0461433 | 0.502783 | 0 | 0.0180965 | 0.0354154 | 0.501946 | 0 | 0.01 |

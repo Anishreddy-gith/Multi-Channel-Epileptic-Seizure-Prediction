@@ -1,0 +1,9 @@
+| package | version |
+| --- | --- |
+| numpy | 1.26.4 |
+| pandas | 2.2.2 |
+| torch | 2.3.1+cu118 |
+| sklearn | 1.5.1 |
+| mne | 1.12.1 |
+| matplotlib | 3.9.2 |
+| scipy | 1.16.1 |

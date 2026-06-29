@@ -1,0 +1,7 @@
+finding,value
+positive outside implemented preictal,0.0
+positive overlapping seizure,0.0
+negative overlapping preictal,0.0
+positive windows >5 min before onset,6685.0
+fraction positives >5 min before onset,0.47260516083421705
+median shared-overlap segment correlation,0.9894599673842652

@@ -1,0 +1,5 @@
+horizon_min,total_windows,positive_windows,negative_windows,positive_ratio,mean_positive_windows_per_seizure,median_positive_windows_per_seizure,min_positive_windows_per_seizure,max_positive_windows_per_seizure
+10.0,734796,14145,720651,0.0192502408831839,282.9,299.0,64,299
+7.5,734796,10845,723951,0.0147591984714124,216.9,224.0,64,224
+5.0,734796,7362,727434,0.0100191073440791,147.24,149.0,64,149
+3.0,734796,4422,730374,0.0060179968317737,88.44,89.0,64,89

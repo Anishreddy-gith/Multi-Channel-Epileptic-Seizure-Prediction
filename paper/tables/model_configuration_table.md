@@ -1,0 +1,5 @@
+| model | architecture_family | input_shape | parameter_count | final_status |
+| --- | --- | --- | --- | --- |
+| eegnet | Compact CNN | 1 x 18 x 1024 | 26770 | COMPLETED |
+| attention | Attention | 1 x 18 x 1024 | 13730 | COMPLETED |
+| hybrid | Hybrid EEGNet-Transformer | 1 x 18 x 1024 | 295906 | INCOMPLETE |

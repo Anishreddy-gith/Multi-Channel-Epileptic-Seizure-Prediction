@@ -1,0 +1,7 @@
+component,value
+OS,Windows-10-10.0.26200-SP0
+Python,3.11.9
+CUDA available,True
+GPU,NVIDIA GeForce RTX 3050 Laptop GPU
+CUDA device count,1
+nvidia-smi,"NVIDIA GeForce RTX 3050 Laptop GPU, 4096 MiB, 581.95"
