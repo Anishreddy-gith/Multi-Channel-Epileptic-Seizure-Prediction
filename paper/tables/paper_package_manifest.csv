@@ -3,6 +3,7 @@ paper/appendix/appendix.md,1456
 paper/captions/figure_captions.json,713
 paper/captions/figure_captions.md,3695
 paper/conference_paper.md,15851
+paper/conference_paper.pdf,345515
 paper/figures/confusion_matrix_eegnet.png,84955
 paper/figures/data_flow_diagram.pdf,15013
 paper/figures/data_flow_diagram.png,80146
@@ -46,9 +47,10 @@ paper/figures/training_pipeline.png,84786
 paper/figures/training_pipeline.svg,30142
 paper/figures/validation_curves_eegnet.png,145399
 paper/FINAL_SUBMISSION_CHECKLIST.md,1650
-paper/FINAL_VALIDATION_REPORT.md,3061
+paper/FINAL_VALIDATION_REPORT.md,2763
 paper/latex/abstract.tex,1625
-paper/latex/main.tex,18700
+paper/latex/build_pdf.ps1,486
+paper/latex/main.tex,16696
 paper/master_experiment_index.json,1060952
 paper/MASTER_EXPERIMENT_INVENTORY.md,1339
 paper/README.md,1361

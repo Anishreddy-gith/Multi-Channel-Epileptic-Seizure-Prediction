@@ -18,6 +18,16 @@ env/
 .ipynb_checkpoints/
 .colab/
 
+# LaTeX build artifacts
+*.aux
+*.bbl
+*.blg
+*.fls
+*.fdb_latexmk
+*.out
+*.synctex.gz
+paper/latex/main.pdf
+
 # Testing / tooling
 .pytest_cache/
 .mypy_cache/

@@ -1,0 +1,11 @@
+jupyterlab
+ipykernel
+ipywidgets
+numpy
+pandas
+matplotlib
+pillow
+torch
+mne
+scikit-learn
+seaborn

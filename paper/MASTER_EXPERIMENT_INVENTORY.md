@@ -1,45 +1,44 @@
 # Master Experiment Inventory
 
-Generated: 2026-06-30T00:56:17
+This inventory summarizes the repository artifacts that are intentionally kept in Git for the final publication package. Raw data, generated tensors, checkpoints, experiment directories, logs, and local outputs are intentionally ignored.
 
-This inventory was regenerated from existing repository artifacts only. No preprocessing, training, evaluation, label generation, checkpoint, metric, or dataset file was modified.
+## Final Paper Package
 
-## Indexed Locations
+- `paper/conference_paper.pdf`
+- `paper/conference_paper.md`
+- `paper/latex/main.tex`
+- `paper/latex/abstract.tex`
+- `paper/latex/build_pdf.ps1`
+- `paper/references/references.bib`
+- `paper/figures/`
+- `paper/tables/`
+- `paper/supplementary/`
+- `paper/appendix/`
+- `paper/review/`
 
-- `paper/`
-- `outputs/`
-- `experiments/`
-- `logs/`
+## Demo Notebook
 
-## Artifact Counts by Extension
+- `notebooks/00_complete_project_demo.ipynb`
+- `notebooks/README.md`
+- `notebooks/requirements_demo.txt`
 
-| extension | count |
-| --- | --- |
-| 0 | 1 |
-| bib | 1 |
-| csv | 1203 |
-| docx | 1 |
-| json | 53 |
-| log | 4 |
-| md | 49 |
-| npy | 2184 |
-| npz | 14 |
-| pdf | 13 |
-| pid | 1 |
-| pkl | 2 |
-| png | 184 |
-| pth | 35 |
-| svg | 12 |
-| tex | 40 |
-| txt | 4 |
+The four earlier split demo notebooks were consolidated into the single complete demo notebook to avoid duplication and make the repository easier to present.
 
-## Key Traceability Sources
+## Generated Inventories
 
-- Dataset counts: `paper/tables/dataset_summary.csv` and `outputs/paper/label_audit/label_audit_summary.json`.
-- Final model metrics: `paper/tables/model_comparison_table.csv` and `outputs/paper/overnight_20260628_034710/tables/final_metrics.csv`.
-- Label audit: `paper/tables/label_audit_summary_table.csv` and `outputs/paper/label_audit/label_audit_summary.json`.
-- Horizon ablation: `paper/tables/preictal_horizon_ablation_table.csv` and `outputs/paper/preictal_horizon_ablation/`.
+- `paper/master_experiment_index.json`
+- `paper/tables/master_experiment_index.csv`
+- `paper/tables/master_experiment_index.md`
+- `paper/tables/master_experiment_index.tex`
+- `paper/tables/paper_package_manifest.csv`
+- `paper/tables/paper_package_manifest.md`
+- `paper/tables/paper_package_manifest.tex`
 
-## Consistency Status
+These files were regenerated from the current repository state during the final cleanup pass.
 
-Main manuscript metrics were checked against stored CSV/JSON artifacts during the final packaging pass. The final validation report records the result.
+## Notes
+
+- The final conference PDF was built from `paper/latex/main.tex`.
+- LaTeX build intermediates are ignored and not tracked.
+- `paper/latex/main.pdf` is treated as a local build artifact; the tracked final PDF is `paper/conference_paper.pdf`.
+- Large runtime artifacts remain local-only by design.

@@ -1,15 +1,25 @@
 \documentclass[10pt,conference]{IEEEtran}
+\usepackage{cite}
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{url}
-\usepackage{hyperref}
 \usepackage{array}
 \usepackage{amsmath}
+\usepackage{placeins}
+\usepackage{hyperref}
 
 \graphicspath{{../figures/}}
+\setlength{\textfloatsep}{8pt plus 1pt minus 2pt}
+\setlength{\floatsep}{8pt plus 1pt minus 2pt}
+\setlength{\intextsep}{8pt plus 1pt minus 2pt}
+\renewcommand{\topfraction}{0.95}
+\renewcommand{\dbltopfraction}{0.95}
+\renewcommand{\textfraction}{0.05}
+\renewcommand{\floatpagefraction}{0.85}
+\renewcommand{\dblfloatpagefraction}{0.85}
 
 \title{A Patient-Wise CHB-MIT Seizure Prediction Study with Leakage, Label, and Horizon Audits}
-\author{Anonymous Submission}
+\author{\IEEEauthorblockN{Boppidi Anish Reddy, Avanika Kademgari, and Trupti Kudale}}
 
 \begin{document}
 \maketitle
@@ -23,35 +33,14 @@ Epileptic seizure prediction seeks to identify a preictal state before clinical 
 
 This paper reports a completed and frozen CHB-MIT study whose main contribution is not a high-performing model, but an audited experimental account of what did and did not work under a patient-wise protocol. We ask whether standard imbalance strategies, attention or hybrid architectures, or shorter global preictal horizons improve patient-wise window-level discrimination. Under the completed protocol, none of these changes produced strong validation area under the precision-recall curve (PR-AUC) or F1. We therefore frame the study as a reproducibility and problem-formulation contribution rather than a performance benchmark.
 
-Figure~\ref{fig:pipeline} summarizes the complete repository-backed workflow. Figures~\ref{fig:dataflow}, \ref{fig:preprocessing}, and \ref{fig:trainingpipeline} show the data flow, preprocessing, and training components used to organize the completed experiments.
+Figure~\ref{fig:pipeline} summarizes the complete repository-backed workflow. Later figures show the data flow, preprocessing, and training components used to organize the completed experiments.
 
-\begin{figure*}[t]
+\begin{figure}[!t]
 \centering
-\includegraphics[width=0.92\textwidth]{pipeline_diagram.pdf}
+\includegraphics[width=\columnwidth]{pipeline_diagram.pdf}
 \caption{End-to-end pipeline from CHB-MIT EDF recordings to paper artifacts. The workflow documents the audited processing, training, evaluation, and reporting path and does not imply clinical deployment.}
 \label{fig:pipeline}
-\end{figure*}
-
-\begin{figure*}[t]
-\centering
-\includegraphics[width=0.92\textwidth]{data_flow_diagram.pdf}
-\caption{Data flow from raw European Data Format (EDF) files to interim shards, patient-wise metadata splits, model checkpoints, metric files, and publication tables.}
-\label{fig:dataflow}
-\end{figure*}
-
-\begin{figure*}[t]
-\centering
-\includegraphics[width=0.92\textwidth]{preprocessing_flowchart.pdf}
-\caption{Frozen preprocessing workflow: required-channel check, channel ordering, 0.5--40 Hz bandpass filtering, 50 Hz notch filtering, 4 s windows with 2 s stride, per-window z-score normalization, and per-EDF shard writing.}
-\label{fig:preprocessing}
-\end{figure*}
-
-\begin{figure*}[t]
-\centering
-\includegraphics[width=0.92\textwidth]{training_pipeline.pdf}
-\caption{Training workflow combining patient-wise split metadata, lazy shard loading, model selection, AdamW optimization, mixed precision, early stopping, checkpointing, threshold selection, and final evaluation.}
-\label{fig:trainingpipeline}
-\end{figure*}
+\end{figure}
 
 \section{Related Work}
 CHB-MIT seizure-prediction studies differ in window length, feature representation, preictal horizon, seizure prediction horizon, seizure occurrence period, and patient-specific versus patient-independent evaluation \cite{truong2018cnn,dissanayake2020patientindependent,koutsouvelis2024preictal}. Reviews of seizure prediction emphasize that clinically meaningful systems require temporal warning metrics, not only window-level classification scores \cite{mormann2007seizure,kuhlmann2018seizure}.
@@ -81,7 +70,7 @@ Positive prevalence & 1.9250\% \\
 \end{tabular}
 \end{table}
 
-Table~\ref{tab:split} gives the frozen patient-wise split. No patient appears in more than one split. This is essential because window-level random splits can leak patient-specific EEG characteristics and seizure-proximity patterns into validation or test data. Figures~\ref{fig:patientsplit}, \ref{fig:patientstats}, and \ref{fig:classdist} visualize the split and patient-level class distribution.
+Table~\ref{tab:split} gives the frozen patient-wise split. No patient appears in more than one split. This is essential because window-level random splits can leak patient-specific EEG characteristics and seizure-proximity patterns into validation or test data. Figures~\ref{fig:patientsplit} and \ref{fig:classdist} visualize the split and class distribution.
 
 \begin{table*}[t]
 \centering
@@ -98,21 +87,14 @@ Test & 152,827 & 2 & 2,755 & chb02, chb10 \\
 \end{tabular}
 \end{table*}
 
-\begin{figure}[t]
+\begin{figure}[!t]
 \centering
 \includegraphics[width=\columnwidth]{patient_split_diagram.pdf}
 \caption{Patient-wise train, validation, and test split sizes. The partitions contain disjoint patients.}
 \label{fig:patientsplit}
 \end{figure}
 
-\begin{figure}[t]
-\centering
-\includegraphics[width=\columnwidth]{dataset_statistics_by_patient.pdf}
-\caption{Window and label counts by patient. Patient-level variation motivates patient-wise reporting and conservative interpretation.}
-\label{fig:patientstats}
-\end{figure}
-
-\begin{figure}[t]
+\begin{figure}[!t]
 \centering
 \includegraphics[width=\columnwidth]{positive_negative_distribution.pdf}
 \caption{Overall positive and negative window distribution under the 10 min preictal definition. The positive prevalence is 1.9250\%.}
@@ -145,7 +127,7 @@ Median shared-overlap segment correlation & 0.9895 \\
 \end{tabular}
 \end{table}
 
-\begin{figure}[t]
+\begin{figure}[!t]
 \centering
 \includegraphics[width=\columnwidth]{distance_to_seizure_histogram.pdf}
 \caption{Distance from positive-window end to seizure onset. A total of 47.26\% of positive windows occur more than 5 min before onset.}
@@ -165,15 +147,17 @@ The primary ranking metric is PR-AUC because positives are rare. Area under the 
 Weighted cross entropy with threshold optimization achieved validation PR-AUC 0.0239 and validation F1 0.0366 and was selected as the frozen strategy. Focal-loss variants changed threshold-dependent F1 but did not improve validation PR-AUC over the selected strategy. The weighted random sampler run was incomplete and is not used as a completed final strategy. Thus, imbalance handling changed operating points but did not produce strong ranking performance.
 
 \subsection{Final Model Comparison}
-Table~\ref{tab:modelresults} reports the final model comparison. Figure~\ref{fig:modelcomp} visualizes validation PR-AUC and F1, while Figures~\ref{fig:roc}, \ref{fig:prcurve}, \ref{fig:confusion}, \ref{fig:learning}, and \ref{fig:valcurves} provide the final EEGNet evaluation curves.
+Table~\ref{tab:modelresults} reports the final model comparison. Figure~\ref{fig:modelcomp} visualizes validation PR-AUC and F1, while Figures~\ref{fig:prcurve} and \ref{fig:confusion} provide the final EEGNet precision-recall curve and threshold-dependent confusion matrix.
 
-\begin{table}[t]
+\begin{table}[!t]
 \centering
 \caption{Final model comparison. Hybrid is included for transparency but was incomplete.}
 \label{tab:modelresults}
-\begin{tabular}{llrrrr}
+\footnotesize
+\setlength{\tabcolsep}{2.8pt}
+\begin{tabular}{llcccc}
 \toprule
-Model & Status & Val PR-AUC & Val F1 & Test PR-AUC & Test F1 \\
+Model & Status & Val PR & Val F1 & Test PR & Test F1 \\
 \midrule
 EEGNet & Completed & 0.0239 & 0.0366 & 0.0179 & 0.0258 \\
 Attention & Completed & 0.0258 & 0.0000 & 0.0163 & 0.0000 \\
@@ -182,52 +166,31 @@ Hybrid & Incomplete & 0.0238 & 0.0461 & 0.0181 & 0.0354 \\
 \end{tabular}
 \end{table}
 
-\begin{figure}[t]
+\begin{figure}[!t]
 \centering
 \includegraphics[width=\columnwidth]{model_comparison_chart.pdf}
 \caption{Validation PR-AUC and F1 for final model runs. Hybrid is shown for transparency but was incomplete.}
 \label{fig:modelcomp}
 \end{figure}
 
-\begin{figure}[t]
-\centering
-\includegraphics[width=\columnwidth]{roc_curve_eegnet.png}
-\caption{Window-level ROC curve for the final EEGNet evaluation. ROC-AUC is secondary to PR-AUC because positives are rare.}
-\label{fig:roc}
-\end{figure}
-
-\begin{figure}[t]
+\begin{figure}[!t]
 \centering
 \includegraphics[width=\columnwidth]{pr_curve_eegnet.png}
 \caption{Window-level precision-recall curve for the final EEGNet evaluation. PR-AUC is the primary ranking metric.}
 \label{fig:prcurve}
 \end{figure}
 
-\begin{figure}[t]
+\begin{figure}[!t]
 \centering
 \includegraphics[width=\columnwidth]{confusion_matrix_eegnet.png}
 \caption{Threshold-dependent test-set confusion matrix for the selected EEGNet operating point.}
 \label{fig:confusion}
 \end{figure}
 
-\begin{figure}[t]
-\centering
-\includegraphics[width=\columnwidth]{learning_curves_eegnet.png}
-\caption{EEGNet learning curves from the completed run. The curves document optimization behavior but do not establish generalization beyond the frozen split.}
-\label{fig:learning}
-\end{figure}
-
-\begin{figure}[t]
-\centering
-\includegraphics[width=\columnwidth]{validation_curves_eegnet.png}
-\caption{EEGNet validation curves over training, used to inspect early stopping and threshold-dependent behavior.}
-\label{fig:valcurves}
-\end{figure}
-
 None of the evaluated architectures produced validation PR-AUC substantially above the 1.9250\% positive prevalence. The Attention model's higher validation PR-AUC did not translate into nonzero F1 under the selected operating point. The available evidence does not support increased model capacity as sufficient to solve the task under this setup.
 
 \subsection{Preictal Horizon Ablation}
-Table~\ref{tab:horizon} reports the EEGNet preictal horizon ablation. Figures~\ref{fig:horizonpr}, \ref{fig:horizonf1}, and \ref{fig:horizonpositive} summarize PR-AUC, F1, and positive class size across horizons.
+Table~\ref{tab:horizon} reports the EEGNet preictal horizon ablation. Figures~\ref{fig:horizonpr} and \ref{fig:horizonf1} summarize validation PR-AUC and F1 across horizons.
 
 \begin{table}[t]
 \centering
@@ -245,28 +208,23 @@ Horizon (min) & Positives & Prevalence & Val PR-AUC & Val F1 \\
 \end{tabular}
 \end{table}
 
-\begin{figure}[t]
+\begin{figure}[!t]
 \centering
 \includegraphics[width=\columnwidth]{preictal_horizon_pr_auc.pdf}
 \caption{Validation PR-AUC for 10, 7.5, 5, and 3 min horizons. Shorter global horizons did not improve PR-AUC over the 10 min baseline.}
 \label{fig:horizonpr}
 \end{figure}
 
-\begin{figure}[t]
+\begin{figure}[!t]
 \centering
 \includegraphics[width=\columnwidth]{preictal_horizon_f1.pdf}
 \caption{Validation F1 for 10, 7.5, 5, and 3 min horizons. Shorter global horizons did not improve F1 over the 10 min baseline.}
 \label{fig:horizonf1}
 \end{figure}
 
-\begin{figure}[t]
-\centering
-\includegraphics[width=\columnwidth]{positive_class_size_vs_horizon.pdf}
-\caption{Positive class size versus preictal horizon. Shortening the horizon monotonically reduces the number of positive windows.}
-\label{fig:horizonpositive}
-\end{figure}
-
 Simple global horizon shortening was not sufficient to improve discrimination. This does not prove that preictal label design is irrelevant; it only shows that the tested global horizons did not improve the measured validation metrics.
+
+\FloatBarrier
 
 \section{Discussion}
 The central finding is a bounded negative result: under a patient-wise split and the completed preprocessing protocol, standard imbalance handling, threshold optimization, and the evaluated neural architectures did not produce reliable window-level seizure prediction.
@@ -286,6 +244,7 @@ Future work should evaluate leave-one-patient-out validation, repeated seeds, co
 \section{Conclusion}
 This study provides a repository-backed patient-wise CHB-MIT seizure prediction experiment with leakage, label, imbalance, and horizon audits. The measured results do not support claims of strong predictive performance: validation PR-AUC remained close to positive prevalence, and no tested shorter preictal horizon improved both PR-AUC and F1 over the 10 min baseline. The main contribution is an honest, reproducible negative finding that highlights the importance of label definition, patient-wise evaluation, and clinically meaningful metrics in seizure prediction research.
 
+\FloatBarrier
 \bibliographystyle{IEEEtran}
 \bibliography{../references/references}
 \end{document}
